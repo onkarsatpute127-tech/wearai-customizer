@@ -1,0 +1,53 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WearAI Customizer</title>
+<style>
+body{margin:0;font-family:Arial;background:#f5f4f0;color:#171717}
+header{background:#111;color:white;padding:22px;display:flex;justify-content:space-between}
+main{max-width:900px;margin:auto;padding:24px}
+.hero{background:#e6e1d8;padding:45px 20px;text-align:center;border-radius:16px}
+button{background:#111;color:white;padding:12px 18px;border:0;border-radius:7px;cursor:pointer}
+input,select,textarea{box-sizing:border-box;width:100%;padding:12px;margin:8px 0 16px;border:1px solid #ccc;border-radius:7px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px}
+.card{background:white;padding:18px;border-radius:12px}
+.shirt{font-size:65px;background:#eee;text-align:center;padding:20px}
+</style>
+</head>
+<body>
+<header><b>WearAI ✦</b><span>Custom Clothing Studio</span></header>
+<main>
+<div class="hero">
+<h1>Your Idea. Your Style.</h1>
+<p>Discover clothing. Create your own design.</p>
+<button onclick="document.getElementById('customize').scrollIntoView()">Start Customizing</button>
+</div>
+<h2>Explore Collections</h2>
+<input id="search" placeholder="Search T-shirts, hoodies, shirts..." oninput="filterItems()">
+<div class="grid" id="products">
+<div class="card" data-name="t-shirt graphic streetwear"><div class="shirt">👕</div><h3>Graphic T-shirt</h3><button onclick="pick('T-shirt')">Customize</button></div>
+<div class="card" data-name="hoodie oversized"><div class="shirt">🧥</div><h3>Oversized Hoodie</h3><button onclick="pick('Hoodie')">Customize</button></div>
+<div class="card" data-name="shirt casual formal"><div class="shirt">👔</div><h3>Custom Shirt</h3><button onclick="pick('Shirt')">Customize</button></div>
+</div>
+<h2 id="customize">Describe Your Design</h2>
+<form onsubmit="sendRequest(event)">
+<label>Product</label>
+<select id="product"><option>T-shirt</option><option>Hoodie</option><option>Shirt</option></select>
+<label>Your design idea</label>
+<textarea id="idea" required placeholder="Example: Black T-shirt with a blue tiger design"></textarea>
+<label>Your contact</label>
+<input id="contact" required placeholder="Email or phone">
+<button type="submit">Download My Request</button>
+</form>
+<p id="message"></p>
+</main>
+<script>
+function pick(p){document.getElementById('product').value=p;document.getElementById('customize').scrollIntoView()}
+function filterItems(){let q=document.getElementById('search').value.toLowerCase();document.querySelectorAll('.card').forEach(c=>c.style.display=c.dataset.name.includes(q)?'block':'none')}
+function sendRequest(e){e.preventDefault();let t='Product: '+document.getElementById('product').value+'\nDesign: '+document.getElementById('idea').value+'\nContact: '+document.getElementById('contact').value;let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([t],{type:'text/plain'}));a.download='wearai-request.txt';a.click();document.getElementById('message').textContent='Request summary downloaded. It has not been sent to the owner.'}
+</script>
+</body>
+</html>
