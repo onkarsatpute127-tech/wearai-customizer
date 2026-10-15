@@ -4,50 +4,228 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WearAI Customizer</title>
+<title>AIWear Studio | Design Your Style</title>
 <style>
-body{margin:0;font-family:Arial;background:#f5f4f0;color:#171717}
-header{background:#111;color:white;padding:22px;display:flex;justify-content:space-between}
-main{max-width:900px;margin:auto;padding:24px}
-.hero{background:#e6e1d8;padding:45px 20px;text-align:center;border-radius:16px}
-button{background:#111;color:white;padding:12px 18px;border:0;border-radius:7px;cursor:pointer}
-input,select,textarea{box-sizing:border-box;width:100%;padding:12px;margin:8px 0 16px;border:1px solid #ccc;border-radius:7px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px}
-.card{background:white;padding:18px;border-radius:12px}
-.shirt{font-size:65px;background:#eee;text-align:center;padding:20px}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f7f7f8;color:#171717}
+header{background:#111;color:white;padding:18px 6%;display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap}
+.logo{font-size:25px;font-weight:bold;color:#b8ff65}
+nav a{color:white;text-decoration:none;margin-left:16px}
+.hero{padding:55px 6%;background:#191919;color:white}
+.hero h1{font-size:clamp(32px,5vw,55px);margin:0 0 14px}
+.hero p{color:#ddd;line-height:1.7}
+button{background:#b8ff65;color:#111;border:0;border-radius:7px;padding:12px 17px;font-weight:bold;cursor:pointer}
+input,select,textarea{padding:12px;border:1px solid #ddd;border-radius:7px;width:100%;font-size:15px}
+section{padding:28px 6%}
+.search{display:flex;gap:10px;flex-wrap:wrap}
+.search input{flex:1;min-width:200px}
+.products{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:20px}
+.card{background:white;border-radius:12px;overflow:hidden;border:1px solid #e7e7e7}
+.card img{width:100%;height:260px;object-fit:cover;background:#eee}
+.card-content{padding:15px}
+.card h3{margin:5px 0 10px}
+.tag{color:#666;font-size:13px}
+.customizer,.panel{background:white;padding:22px;border-radius:12px;border:1px solid #e5e5e5}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:22px}
+label{display:block;font-size:14px;margin:14px 0 7px}
+#preview{min-height:240px;border-radius:12px;display:flex;align-items:center;justify-content:center;text-align:center;padding:20px;background:#ededed}
+#preview-shirt{font-size:90px;filter:drop-shadow(0 8px 8px #999)}
+#preview-text{font-weight:bold;font-size:20px;overflow-wrap:anywhere}
+.small{font-size:13px;color:#666;line-height:1.6}
+footer{background:#111;color:white;padding:25px 6%;margin-top:25px}
+.hidden{display:none}
 </style>
 </head>
 <body>
-<header><b>WearAI ✦</b><span>Custom Clothing Studio</span></header>
-<main>
+
+<header>
+  <div class="logo">AIWear Studio</div>
+  <nav>
+    <a href="#shop">Shop</a>
+    <a href="#customize">Customize</a>
+    <a href="#account">Register</a>
+    <a href="#admin">Admin</a>
+  </nav>
+</header>
+
 <div class="hero">
-<h1>Your Idea. Your Style.</h1>
-<p>Discover clothing. Create your own design.</p>
-<button onclick="document.getElementById('customize').scrollIntoView()">Start Customizing</button>
+  <h1>Your Idea.<br>Your Style. Your Clothing.</h1>
+  <p>Discover your style, personalize your clothing and submit your design idea.</p>
+  <a href="#shop"><button>Explore Collection</button></a>
+  <a href="#customize"><button>Design Your T-shirt</button></a>
 </div>
-<h2>Explore Collections</h2>
-<input id="search" placeholder="Search T-shirts, hoodies, shirts..." oninput="filterItems()">
-<div class="grid" id="products">
-<div class="card" data-name="t-shirt graphic streetwear"><div class="shirt">👕</div><h3>Graphic T-shirt</h3><button onclick="pick('T-shirt')">Customize</button></div>
-<div class="card" data-name="hoodie oversized"><div class="shirt">🧥</div><h3>Oversized Hoodie</h3><button onclick="pick('Hoodie')">Customize</button></div>
-<div class="card" data-name="shirt casual formal"><div class="shirt">👔</div><h3>Custom Shirt</h3><button onclick="pick('Shirt')">Customize</button></div>
-</div>
-<h2 id="customize">Describe Your Design</h2>
-<form onsubmit="sendRequest(event)">
-<label>Product</label>
-<select id="product"><option>T-shirt</option><option>Hoodie</option><option>Shirt</option></select>
-<label>Your design idea</label>
-<textarea id="idea" required placeholder="Example: Black T-shirt with a blue tiger design"></textarea>
-<label>Your contact</label>
-<input id="contact" required placeholder="Email or phone">
-<button type="submit">Download My Request</button>
-</form>
-<p id="message"></p>
-</main>
+
+<section id="shop">
+  <h2>Explore Clothing</h2>
+  <p class="small">Choose a product and start creating your own design.</p>
+  <div class="search">
+    <input id="search" placeholder="Search T-shirts, hoodies, shirts..." oninput="renderProducts()">
+    <select id="category" onchange="renderProducts()" style="max-width:220px">
+      <option value="All">All Clothing</option>
+      <option>T-shirt</option>
+      <option>Shirt</option>
+      <option>Hoodie</option>
+      <option>Women's Top</option>
+    </select>
+  </div>
+  <div class="products" id="products" style="margin-top:22px"></div>
+</section>
+
+<section id="customize">
+  <h2>Customize Your Clothing</h2>
+  <p class="small">Create a design brief. Your selection will be included in your request.</p>
+  <div class="grid">
+    <div class="customizer">
+      <label>Choose product</label>
+      <select id="productType" onchange="updatePreview()">
+        <option>T-shirt</option><option>Shirt</option>
+        <option>Hoodie</option><option>Women's Top</option>
+      </select>
+
+      <label>Design name or text</label>
+      <input id="designText" placeholder="Example: My Dream, Stay Strong" oninput="updatePreview()">
+
+      <label>Clothing colour</label>
+      <select id="shirtColor" onchange="updatePreview()">
+        <option value="#ffffff">White</option>
+        <option value="#171717">Black</option>
+        <option value="#c9d8e8">Light Blue</option>
+        <option value="#d6b3a0">Beige</option>
+        <option value="#b8ff65">Lime Green</option>
+      </select>
+
+      <label>Describe your design idea</label>
+      <textarea id="idea" rows="4" placeholder="Example: Minimal streetwear design with a mountain graphic"></textarea>
+
+      <label>Size</label>
+      <select id="size"><option>S</option><option>M</option><option>L</option><option>XL</option><option>XXL</option></select>
+
+      <label>Quantity</label>
+      <input id="quantity" type="number" min="1" value="1">
+
+      <label>Upload your reference image (optional)</label>
+      <input id="reference" type="file" accept="image/*">
+
+      <button style="margin-top:18px;width:100%" onclick="saveDesign()">Submit Design Request</button>
+    </div>
+
+    <div>
+      <h3>Live Preview</h3>
+      <div id="preview">
+        <div>
+          <div id="preview-shirt">👕</div>
+          <div id="preview-text">Your Design</div>
+        </div>
+      </div>
+      <p class="small">This is a basic preview, not a realistic garment mockup. The current version does not generate AI images yet.</p>
+      <div class="panel">
+        <h3>What happens next?</h3>
+        <p class="small">Your design request can be saved in this browser. The actual AI image generation, customer accounts and online database will need to be connected separately.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="account">
+  <h2>Buyer Registration</h2>
+  <div class="panel" style="max-width:520px">
+    <label>Your name</label><input id="buyerName" placeholder="Enter your name">
+    <label>Email</label><input id="buyerEmail" type="email" placeholder="Enter your email">
+    <button style="margin-top:15px" onclick="registerBuyer()">Register</button>
+    <p id="registerMessage" class="small"></p>
+    <p class="small">Demo registration only. This does not create a secure online account.</p>
+  </div>
+</section>
+
+<section id="admin">
+  <h2>Admin Portal — Demo</h2>
+  <div class="panel">
+    <p class="small">Demo admin view for requests saved in this browser. It is not password-protected and is not suitable for real customer data.</p>
+    <button onclick="showAdmin()">View Design Requests</button>
+    <div id="adminResults" style="margin-top:15px"></div>
+  </div>
+</section>
+
+<footer>
+  <h3>AIWear Studio</h3>
+  <p class="small" style="color:#ddd">You describe it. AI designs it. We help bring it to life.</p>
+  <p class="small" style="color:#ddd">India | Prices will be discussed after design selection.</p>
+</footer>
+
 <script>
-function pick(p){document.getElementById('product').value=p;document.getElementById('customize').scrollIntoView()}
-function filterItems(){let q=document.getElementById('search').value.toLowerCase();document.querySelectorAll('.card').forEach(c=>c.style.display=c.dataset.name.includes(q)?'block':'none')}
-function sendRequest(e){e.preventDefault();let t='Product: '+document.getElementById('product').value+'\nDesign: '+document.getElementById('idea').value+'\nContact: '+document.getElementById('contact').value;let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([t],{type:'text/plain'}));a.download='wearai-request.txt';a.click();document.getElementById('message').textContent='Request summary downloaded. It has not been sent to the owner.'}
+const productsData = [
+ {name:"Classic T-shirt",cat:"T-shirt",img:"https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=600&q=80"},
+ {name:"Streetwear T-shirt",cat:"T-shirt",img:"https://images.unsplash.com/photo-1503341504253-dff4815485f1?auto=format&fit=crop&w=600&q=80"},
+ {name:"Casual Shirt",cat:"Shirt",img:"https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=600&q=80"},
+ {name:"Classic Hoodie",cat:"Hoodie",img:"https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=600&q=80"},
+ {name:"Women's Top",cat:"Women's Top",img:"https://images.unsplash.com/photo-1551163943-3f6a855d1153?auto=format&fit=crop&w=600&q=80"}
+];
+
+function renderProducts(){
+ const q=document.getElementById("search").value.toLowerCase();
+ const cat=document.getElementById("category").value;
+ const list=productsData.filter(p=>(cat==="All"||p.cat===cat)&&(p.name+" "+p.cat).toLowerCase().includes(q));
+ document.getElementById("products").innerHTML=list.map(p=>`
+ <div class="card">
+ <img src="${p.img}" alt="${p.name}" loading="lazy">
+ <div class="card-content"><div class="tag">${p.cat}</div>
+ <h3>${p.name}</h3><p class="small">Customize this product to share your idea.</p>
+ <button onclick="chooseProduct('${p.cat}')">Customize</button></div></div>`).join("")||"<p>No matching products. Try another search.</p>";
+}
+function chooseProduct(cat){
+ document.getElementById("productType").value=cat;
+ updatePreview();
+ location.hash="customize";
+}
+function updatePreview(){
+ const colors=document.getElementById("shirtColor").value;
+ document.getElementById("preview").style.background=colors;
+ document.getElementById("preview").style.color=colors==="#171717"?"white":"#171717";
+ document.getElementById("preview-text").textContent=document.getElementById("designText").value||"Your Design";
+ const icons={"T-shirt":"👕","Shirt":"👔","Hoodie":"🧥","Women's Top":"👚"};
+ document.getElementById("preview-shirt").textContent=icons[document.getElementById("productType").value];
+}
+function getRequests(){
+ try{return JSON.parse(localStorage.getItem("wearai_requests")||"[]")}catch(e){return []}
+}
+function saveDesign(){
+ const request={
+  name:document.getElementById("buyerName").value.trim(),
+  email:document.getElementById("buyerEmail").value.trim(),
+  product:document.getElementById("productType").value,
+  design:document.getElementById("designText").value.trim(),
+  colour:document.getElementById("shirtColor").selectedOptions[0].text,
+  idea:document.getElementById("idea").value.trim(),
+  size:document.getElementById("size").value,
+  quantity:document.getElementById("quantity").value,
+  date:new Date().toLocaleString()
+ };
+ if(!request.idea&&!request.design){alert("Please enter your design text or idea first.");return}
+ try{
+  const all=getRequests();all.push(request);
+  localStorage.setItem("wearai_requests",JSON.stringify(all));
+  alert("Design request saved in this browser. This is a demo, not an online order.");
+ }catch(e){alert("Could not save the request in this browser.")}
+}
+function registerBuyer(){
+ const name=document.getElementById("buyerName").value.trim();
+ const email=document.getElementById("buyerEmail").value.trim();
+ if(!name||!email||!email.includes("@")){alert("Please enter your name and a valid email.");return}
+ document.getElementById("registerMessage").textContent="Demo registration complete for "+name+". Secure account registration is not connected yet.";
+}
+function showAdmin(){
+ const all=getRequests();
+ document.getElementById("adminResults").innerHTML=all.length?all.map((r,i)=>`
+ <div class="panel" style="margin-top:10px">
+ <b>Request ${i+1}: ${escapeText(r.product)}</b>
+ <p class="small">Customer: ${escapeText(r.name||"Not provided")} | Email: ${escapeText(r.email||"Not provided")}</p>
+ <p class="small">Design: ${escapeText(r.design)} | Colour: ${escapeText(r.colour)} | Size: ${escapeText(r.size)} | Quantity: ${escapeText(r.quantity)}</p>
+ <p class="small">Idea: ${escapeText(r.idea)} | Date: ${escapeText(r.date)}</p>
+ </div>`).join(""):"<p class='small'>No requests saved in this browser yet.</p>";
+}
+function escapeText(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+renderProducts();
+updatePreview();
 </script>
 </body>
 </html>
