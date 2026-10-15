@@ -18,6 +18,14 @@ button{background:#b8ff65;color:#111;border:0;border-radius:7px;padding:12px 17p
 input,select,textarea{padding:12px;border:1px solid #ddd;border-radius:7px;width:100%;font-size:15px}
 section{padding:28px 6%}
 .search{display:flex;gap:10px;flex-wrap:wrap}
+  #preview-shirt{
+  display:block;
+  width:220px;
+  height:240px;
+  object-fit:contain;
+  filter:none;
+  margin:auto;
+}
 .search input{flex:1;min-width:200px}
 .products{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:20px}
 .card{background:white;border-radius:12px;overflow:hidden;border:1px solid #e7e7e7}
@@ -29,7 +37,7 @@ section{padding:28px 6%}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:22px}
 label{display:block;font-size:14px;margin:14px 0 7px}
 #preview{min-height:240px;border-radius:12px;display:flex;align-items:center;justify-content:center;text-align:center;padding:20px;background:#ededed}
-#preview-shirt{font-size:90px;filter:drop-shadow(0 8px 8px #999)}
+#preview-shirt{   display:block;   width:220px;   height:240px;   object-fit:contain;   filter:none;   margin:auto; }{font-size:90px;filter:drop-shadow(0 8px 8px #999)}
 #preview-text{font-weight:bold;font-size:20px;overflow-wrap:anywhere}
 .small{font-size:13px;color:#666;line-height:1.6}
 footer{background:#111;color:white;padding:25px 6%;margin-top:25px}
@@ -113,7 +121,7 @@ footer{background:#111;color:white;padding:25px 6%;margin-top:25px}
       <h3>Live Preview</h3>
       <div id="preview">
         <div>
-          <div id="preview-shirt">👕</div>
+          <div <img   id="preview-shirt"   src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=600&q=80"   alt="Realistic T-shirt preview"   style="width:220px;height:240px;object-fit:contain;filter:none;" >>👕</div>
           <div id="preview-text">Your Design</div>
         </div>
       </div>
@@ -177,13 +185,27 @@ function chooseProduct(cat){
  updatePreview();
  location.hash="customize";
 }
+
 function updatePreview(){
- const colors=document.getElementById("shirtColor").value;
- document.getElementById("preview").style.background=colors;
- document.getElementById("preview").style.color=colors==="#171717"?"white":"#171717";
- document.getElementById("preview-text").textContent=document.getElementById("designText").value||"Your Design";
- const icons={"T-shirt":"👕","Shirt":"👔","Hoodie":"🧥","Women's Top":"👚"};
- document.getElementById("preview-shirt").textContent=icons[document.getElementById("productType").value];
+ const colors = document.getElementById("shirtColor").value;
+ document.getElementById("preview").style.background = colors;
+ document.getElementById("preview").style.color =
+   colors === "#171717" ? "white" : "#171717";
+
+ document.getElementById("preview-text").textContent =
+   document.getElementById("designText").value || "Your Design";
+
+ const images = {
+   "T-shirt": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=600&q=80",
+   "Shirt": "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=600&q=80",
+   "Hoodie": "https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=600&q=80",
+   "Women's Top": "https://images.unsplash.com/photo-1551163943-3f6a855d1153?auto=format&fit=crop&w=600&q=80"
+ };
+
+ const previewImage = document.getElementById("preview-shirt");
+ previewImage.src = images[document.getElementById("productType").value];
+ previewImage.alt = document.getElementById("productType").value + " preview";
+
 }
 function getRequests(){
  try{return JSON.parse(localStorage.getItem("wearai_requests")||"[]")}catch(e){return []}
